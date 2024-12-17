@@ -1,0 +1,17 @@
+property,value
+standardversion,http://opendata.gosmonitor.ru/standard/3.0
+identifier,ANO CPUR/АНО ЦПУР
+title,Статистические данные о занятости и безработице в разрезе субъектов РФ
+description,"Набор данных содержит данные о занятости и безработицы в разрезе субъектов РФ на основе материалов периодического сборника Росстата «Рабочая сила, занятость и безработица в России»."
+creator,АНО ЦПУР - Центр перспективных управленческих решений
+created,20201228
+modified,20200731
+subject,
+format,csv
+provenance,
+valid,
+publishername,
+publisherphone,
+publishermbox,a.shiyan@cpur.ru
+data,
+structure,
