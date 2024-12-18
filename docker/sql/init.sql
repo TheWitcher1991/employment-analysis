@@ -1,9 +1,11 @@
-""" CREATE USER admin WITH PASSWORD 'admin';
+-- init.sql
+
+"""
+CREATE USER admin WITH PASSWORD 'admin';
 
 CREATE DATABASE job;
 
 GRANT ALL PRIVILEGES ON DATABASE job TO admin;
-
 """
 
 USE job;
@@ -42,4 +44,4 @@ CREATE TABLE IF NOT EXISTS employment (
     num_emagegroup_50_59 FLOAT,
     num_emagegroup_60older FLOAT,
     year INT NOT NULL
-)
+);

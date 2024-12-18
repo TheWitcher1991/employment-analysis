@@ -1,4 +1,4 @@
-name: joblessness-prod
+name: employment-analysis
 
 version: '3.7'
 
@@ -16,6 +16,10 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: etl-service
+    environment:
+      POSTGRES_URI: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+    volumes:
+      - ./scripts/etl.py:${WORKDIR}
     depends_on:
       postgres:
         condition: service_healthy
@@ -30,8 +34,9 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
+    command: -c initdb && psql -d ${POSTGRES_DB} -f /docker-entrypoint-initdb.d/init.sql
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./docker/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
@@ -39,7 +44,7 @@ services:
       - shared
     restart: always
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER" ]
+      test: [ 'CMD-SHELL', 'pg_isready -U $$POSTGRES_USER' ]
       interval: 10s
       timeout: 5s
       retries: 3
@@ -51,7 +56,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
     ports:
-      - "8080:80"
+      - '8080:80'
     volumes:
       - pgadmin_data:/var/lib/pgadmin
     depends_on:
@@ -65,12 +70,12 @@ services:
     image: apache/superset:latest
     container_name: superset-service
     environment:
-      SUPERSET_LOAD_EXAMPLES: "yes"
+      SUPERSET_LOAD_EXAMPLES: 'yes'
       SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
       SUPERSET_USERNAME: ${SUPERSET_USERNAME}
       SUPERSET_PASSWORD: ${SUPERSET_PASSWORD}
     ports:
-      - "8088:8088"
+      - '8088:8088'
     volumes:
       - superset_home:/app/superset_home
     depends_on:
@@ -87,11 +92,13 @@ services:
       - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-      - "--storage.tsdb.path=/prometheus"
-      - "--web.console.libraries=/etc/prometheus/console_libraries"
-      - "--web.console.templates=/etc/prometheus/consoles"
-      - "--log.level=warn"
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+      - '--web.console.libraries=/etc/prometheus/console_libraries'
+      - '--web.console.templates=/etc/prometheus/consoles'
+      - '--log.level=warn'
+    ports:
+      - '9090:9090'
     depends_on:
       postgres:
         condition: service_healthy
@@ -109,9 +116,9 @@ services:
       GF_LOG_MODE: console
       GF_LOG_LEVEL: critical
       GF_PANELS_ENABLE_ALPHA: true
-      GF_FEATURE_TOGGLES_ENABLE: "accessControlOnCall lokiLogsDataplane"
+      GF_FEATURE_TOGGLES_ENABLE: 'accessControlOnCall lokiLogsDataplane'
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - grafana_data:/var/lib/grafana
       - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources
@@ -132,7 +139,7 @@ services:
       DATA_SOURCE_USER: ${DATA_SOURCE_USER}
       DATA_SOURCE_PASS: ${DATA_SOURCE_PASS}
     ports:
-      - "9187:9187"
+      - '9187:9187'
     networks:
       - shared
     restart: always
@@ -141,7 +148,7 @@ services:
     image: prom/node-exporter:v1.8.2
     container_name: node-exporter-service
     ports:
-      - "9100:9100"
+      - '9100:9100'
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro
