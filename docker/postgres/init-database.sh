@@ -1,14 +1,11 @@
--- init.sql
+#!/bin/bash
 
--- CREATE USER admin WITH PASSWORD 'admin';
+set -e
 
--- CREATE DATABASE job;
+psql -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" --dbname "$POSTGRES_DB" <<-EOSQL
+  GRANT ALL PRIVILEGES ON DATABASE "$POSTGRES_DB" TO "$POSTGRES_USER";
 
--- GRANT ALL PRIVILEGES ON DATABASE job TO admin;
-
-USE job;
-
-CREATE TABLE employment (
+  CREATE TABLE employment (
     id SERIAL PRIMARY KEY,
     territory VARCHAR(255),
     num_economactivepopulation_all FLOAT,
@@ -42,4 +39,5 @@ CREATE TABLE employment (
     num_emagegroup_50_59 FLOAT,
     num_emagegroup_60older FLOAT,
     year INT NOT NULL
-);
+  );
+EOSQL

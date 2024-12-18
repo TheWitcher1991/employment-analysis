@@ -36,4 +36,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY ./scripts/etl.py $DIR/
 
+COPY ./data $DIR/
+
 CMD ["python", "etl.py"]

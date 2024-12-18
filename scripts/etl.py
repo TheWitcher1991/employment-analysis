@@ -4,6 +4,9 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
+
 def load_data(csv_file, db_url):
     try:
         df = pd.read_csv(csv_file)
@@ -30,6 +33,6 @@ def load_data(csv_file, db_url):
 
 
 if __name__ == "__main__":
-    csv_file = "./data/data.csv"
+    csv_file = 'data.csv'
     db_url = os.environ.get("POSTGRES_URI")
     load_data(csv_file, db_url)
