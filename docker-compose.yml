@@ -21,7 +21,7 @@ services:
       dockerfile: Dockerfile
     container_name: etl-service
     environment:
-      POSTGRES_URI: ${DATA_SOURCE_NAME}
+      POSTGRES_URI: ${POSTGRES_URI}
     depends_on:
       postgres:
         condition: service_healthy
@@ -75,8 +75,7 @@ services:
     environment:
       SUPERSET_LOAD_EXAMPLES: 'yes'
       SUPERSET_SECRET_KEY: ${SUPERSET_SECRET_KEY}
-      SUPERSET_USERNAME: ${SUPERSET_USERNAME}
-      SUPERSET_PASSWORD: ${SUPERSET_PASSWORD}
+      SQLALCHEMY_DATABASE_URL: ${POSTGRES_URI}
     ports:
       - '8088:8088'
     volumes:
@@ -141,8 +140,8 @@ services:
         target: /etc/postgres_exporter/queries.yaml
     environment:
       DATA_SOURCE_URI: ${DATA_SOURCE_URI}
-      DATA_SOURCE_USER: ${DATA_SOURCE_USER}
-      DATA_SOURCE_PASS: ${DATA_SOURCE_PASS}
+      DATA_SOURCE_USER: ${POSTGRES_USER}
+      DATA_SOURCE_PASS: ${POSTGRES_PASSWORD}
       PG_EXPORTER_EXTEND_QUERY_PATH: '/etc/postgres_exporter/queries'
     ports:
       - '9187:9187'
