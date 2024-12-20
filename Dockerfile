@@ -39,3 +39,6 @@ COPY ./scripts/etl.py $DIR/
 COPY ./data $DIR/
 
 CMD ["python", "etl.py"]
+
+
+
